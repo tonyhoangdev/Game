@@ -30,7 +30,7 @@ void SCR_SetTextColor(color_t color)
     attributes = info.wAttributes;
     attributes &= ~(0x000F);
     attributes |= (DWORD)color;
-    
+
     SetConsoleTextAttribute(hConsoleOutput, attributes);
 }
 
@@ -54,7 +54,7 @@ void SCR_Delay(int ms)
     Sleep(ms);
 }
 
-void SCR_NoCursorType()
+void SCR_NoCursorType(void)
 {
     CONSOLE_CURSOR_INFO info;
     info.bVisible = false;

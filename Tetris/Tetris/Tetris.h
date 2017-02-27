@@ -18,8 +18,8 @@ typedef struct
     int iBoard, jBoard;
 } khoi_gach_t;
 
-void DrawBoard();
-void DisplayBoard();
+void DrawBoard(void);
+void DisplayBoard(void);
 void UpdateToaDo(int row);
 khoi_gach_t * CreateKhoiGach(int id);
 
@@ -53,9 +53,9 @@ int Check(khoi_gach_t * pKhoiGach, info_t * info);
 
 void HuyKhoiGach(khoi_gach_t * pKhoiGach);
 
-int Loai();
+int Loai(void);
 
 void Ve_Next(int id);
-void Xoa_Next();
+void Xoa_Next(void);
 
 #endif /* TETRIS_H */

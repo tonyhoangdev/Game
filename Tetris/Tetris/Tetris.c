@@ -2,7 +2,7 @@
 
 int g_board[MAX_ROW][MAX_COL] = { 0 };
 
-void DrawBoard()
+void DrawBoard(void)
 {
     int i, j;
     for (i = LEFT; i <= LEFT + 10 + 1; i++)
@@ -41,7 +41,7 @@ void DrawBoard()
     }
 }
 
-void DisplayBoard()
+void DisplayBoard(void)
 {
     int i, j;
     for (i = 0; i < MAX_ROW; i++)
@@ -249,7 +249,7 @@ void RotateValue(khoi_gach_t * pKhoiGach)
         free(pKhoiGach->arr[i]);
     }
     free(pKhoiGach->arr);
-    
+
     pKhoiGach->col = tmpCol;
     pKhoiGach->row = tmpRow;
     pKhoiGach->arr = tmpArr;
@@ -372,7 +372,7 @@ void HuyKhoiGach(khoi_gach_t * pKhoiGach)
     pKhoiGach = NULL;
 }
 
-int Loai()
+int Loai(void)
 {
     int x = rand() % 7;
     int loai = 0;
@@ -422,13 +422,13 @@ void Ve_Next(int id)
                 SCR_GotoXY(iRoot + j, jRoot + i);
                 printf("%c", 2);
             }
-        }        
+        }
     }
 
     HuyKhoiGach(pNext);
 }
 
-void Xoa_Next()
+void Xoa_Next(void)
 {
     int iRoot = LEFT + MAX_COL + 5;
     int jRoot = TOP;

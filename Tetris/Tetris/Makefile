@@ -1,64 +1,107 @@
+## MinhHT3 - TonyHoang
+## v1.0 - 20161212
+## v2.0 - 20170113
+## v3.0 - 20170223
 ## search file c
 VPATH=$(SOURCEDIR)
 
-## Define CSOURCES
+## Define CSOURCES and ASMSOURCES
 CSOURCES:=Screen.c
 CSOURCES+=Tetris.c
 CSOURCES+=Main.c
 
-## Define SOURCEDIR
-SOURCEDIR:=./
-SOURCEDIR+=inc/
-SOURCEDIR+=src/
+## Define SOURCEDIR_LIB
+BASEDIR:=./
+SOURCEDIR_LIB:=include/
+
 ## Location of objects
-OBJECTDIR:=obj/
+OBJECTDIR_NAME:=obj
+SOURCEDIR_NAME:=src
+
+## Execute file ##
+EXECUTABLE:=Tetris.exe
 
 ## Toolchain executables ##
 CC:=gcc
+AS:=gcc
+LD:=gcc
 CCSIZE:=size
+PROFILE:=gprof
 
-## Toolchain flags ##
-CFLAGS:= -g -O0
-CFLAGS+= -Wall -std=c99 -Wextra -Werror
+## Toolchain C flags ##
+CFLAGS:=-std=c99
+CFLAGS+=-Wall
+CFLAGS+=-Wextra
+CFLAGS+=-Wstrict-prototypes
+CFLAGS+=-pedantic
+# CFLAGS+=-pg
+CFLAGS+=-g
+CFLAGS+=-O1
 
-## Execute file ##
-EXECUTABLE=Tetris.exe
+## Assembly flags
+ASFLAGS:=
+
+## Linker flags
+# LDFLAGS:= -pg
 
 ## Internal variables
 OBJECTS=$(CSOURCES:%.c=%.o)
-COBJECTS=$(addprefix $(OBJECTDIR),$(OBJECTS))
-INCLUDES=$(addprefix -I,$(SOURCEDIR))
+OBJECTS+=$(ASMSOURCES:%.$(ASM_EXT)=%.o)
+OBJECTDIR=$(OBJECTDIR_NAME)/
+COBJECTS:=$(addprefix $(OBJECTDIR),$(OBJECTS))
+
+SOURCEDIR=$(SOURCEDIR_NAME)/
+SOURCEDIR+=$(addprefix $(BASEDIR),$(SOURCEDIR_LIB))
+
+INCLUDES:=$(addprefix -I,$(SOURCEDIR))
+
+SEPARATOR=========================================
 
 ## Targets
-all: print $(EXECUTABLE) size run
-
-$(EXECUTABLE): dir $(COBJECTS)
-	@echo 'Linking to $(EXECUTABLE)'
-	@$(CC) -o $(EXECUTABLE) $(COBJECTS) $(CFLAGS)
-
+all: print dir $(EXECUTABLE) size build_complete
+# Target used to compile C source files
 # $<: dependency (%.c)
 # $@: target (%.o)
 $(OBJECTDIR)%.o: %.c
+	@echo $(SEPARATOR)
 	@echo 'Compiling $@'
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
+# Target used to compile assembler files
+$(OBJECTDIR)%.o: %.S
+	@echo $(SEPARATOR)
+	@echo 'Compiling $@'
+	@$(AS) $(ASFLAGS) $(INCLUDES) -c $< -o $@
+# Target used to link compiled sources
+$(EXECUTABLE): $(COBJECTS)
+	@echo $(SEPARATOR)
+	@echo 'Linking to $(EXECUTABLE)'
+	@$(LD) -o $(EXECUTABLE) $(COBJECTS) $(LDFLAGS)
+# Target used to print executables sizes
 size:
+	@echo $(SEPARATOR)
+	@echo 'Size of $(EXECUTABLE)'
 	@$(CCSIZE) $(EXECUTABLE)
-
+# Target used to print compile informations
 print:
-	@echo 'Compile options: $(CFLAGS) $(INCLUDES)'
-
+	@echo $(SEPARATOR)
+	@echo 'Compile C options:'
+	@echo '    $(CFLAGS)'
+	@echo 'Compile ASM options:'
+	@echo '    $(ASFLAGS)'
+	@echo 'Includes:'
+	@echo '    $(INCLUDES)'
+build_complete:
+	@echo $(SEPARATOR)
+	@echo 'Build completed!'
+#Target used to create folder used to store temporary objects
 dir:
-	mkdir -p $(OBJECTDIR)
-
+	@mkdir -p $(OBJECTDIR)
+#Target used to remove files and folders
 clean:
-	rm -rf $(OBJECTDIR)
+	@echo $(SEPARATOR)
+	$(RM) -rf $(OBJECTDIR) $(EXECUTABLE) gmon.out analysis.txt
+prof:
+	@echo $(SEPARATOR)
+	$(PROFILE) $(EXECUTABLE) gmon.out > analysis.txt
 
-clean_all:
-	rm -rf $(OBJECTDIR) $(EXECUTABLE)
-
-run:
-	@echo 'Run...'
-	@./$(EXECUTABLE)
-
-.PHONY: all print dir size run clean clean_all
+.PHONY: all print dir size clean prof

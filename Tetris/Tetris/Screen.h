@@ -30,6 +30,6 @@ void SCR_Clrscr(void);
 void SCR_SetTextColor(color_t color);
 void SCR_SetBGColor(color_t color);
 void SCR_Delay(int ms);
-void SCR_NoCursorType();
+void SCR_NoCursorType(void);
 
 #endif /* SCREEN_H */

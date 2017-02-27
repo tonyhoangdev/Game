@@ -4,7 +4,7 @@
 #include "Screen.h"
 #include "Tetris.h"
 
-int main()
+int main(void)
 {
     //HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     //COORD coord = { 12, 23 };
